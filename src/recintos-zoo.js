@@ -59,6 +59,16 @@ class RecintosZoo {
 
         return recintosViaveis.length > 0 ? { recintosViaveis } : { erro: 'Não há recinto viável' };
     }
+
+    recintoCompativel(animal, quantidade, recinto) {
+        if (this.animaisConfig[animal].tipo === 'carnivoro' && recinto.animais.length > 0) {
+          return false;
+        }
+        if (recinto.animais.length > 0 && !recinto.animais.includes(animal)) {
+          return this.espacoSuficiente(animal, quantidade, { ...recinto, tamanhoTotal: recinto.tamanhoTotal - 1 });
+        }
+        return true;
+      }
 }
 
 export { RecintosZoo as RecintosZoo };
