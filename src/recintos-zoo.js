@@ -21,7 +21,7 @@ class RecintosZoo {
             },
         };
     }
-    
+
     animalValido(animal) {
         return Object.keys(this.animaisConfig).includes(animal);
     }
@@ -40,6 +40,25 @@ class RecintosZoo {
         return espacoNecessario + espacoOcupado <= recinto.tamanhoTotal;
     }
 
+    analisaRecintos(animal, quantidade) {
+        if (!this.animalValido(animal)) {
+            return { erro: 'Animal inválido' };
+        }
+        if (!this.quantidadeValida(quantidade)) {
+            return { erro: 'Quantidade inválida' };
+        }
+
+        const recintosViaveis = this.recintos
+            .filter(recinto => this.biomaAdequado(animal, recinto) &&
+                this.espacoSuficiente(animal, quantidade, recinto) &&
+                this.recintoCompativel(animal, quantidade, recinto))
+            .map(recinto => {
+                const espacoLivre = recinto.tamanhoTotal - recinto.animais.length - (this.animaisConfig[animal].tamanho * quantidade);
+                return `Recinto ${recinto.numero} (espaço livre: ${espacoLivre} total: ${recinto.tamanhoTotal})`;
+            });
+
+        return recintosViaveis.length > 0 ? { recintosViaveis } : { erro: 'Não há recinto viável' };
+    }
 }
 
 export { RecintosZoo as RecintosZoo };
